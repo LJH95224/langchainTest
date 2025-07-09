@@ -97,3 +97,38 @@ pipreqs . --force --encoding=utf-8 --ignore tests,venv
 #### 注意事项
 > 1. pipreqs 依赖源文件中的 import 语句，不会识别动态导入。 
 > 2. 如果你用的是模块别名（如 import numpy as np），它也能识别。
+
+
+## 标准参数、事件与输入输出
+
+### LangChain Message
+
+#### SystemMessage: 系统角色
+#### HumanMessage: 用户角色
+#### AIMessage: 应用助理角色
+
+| 属性                | 标准化  | 描述                             | 
+|-------------------|------|--------------------------------|
+| content           | 原生   | 通常为字符串，但也可以是内容块列表              | 
+| Tool_call         | 标准化  | 与消息相关的工具调用                     | 
+| Invalid_tool_call | 标准化  | 工具调用与消息相关的解析错误                 |
+| usage_metadata    | 标准化  | 元数据（输入输出token数，总计token数等）      |
+| id                | 标准化  | 消息唯一标识符                        |
+| response_metadata | 原生  | 相应元数据（响应头、token计数）             |
+> ⚠️注意：不同的大模型提供的内容属性并不相同，目前行业暂无统一标准。
+#### AIMessageChunk: 应用助理流式输出
+#### ToolMessage: 工具角色
+#### RemoveMessage: LangGraph 聊天记录
+
+
+## 示例选择权使用
+
+### 根据长度动态选择提示词示例
+    根据用户的输入、提示词总长度来动态计算可容纳的示例个数
+
+### 根据语义相似度选择提示词示例
+- 筛选示例组中与输入的语义相似度最高的示例
+- 本质：将问题语示例嵌入向量空间后进行搜索对比
+- 依赖：向量数据库
+<img src="./image/据语义相似度选择提示词.png">
+### 根据MMR与最大余弦相似度选择示例

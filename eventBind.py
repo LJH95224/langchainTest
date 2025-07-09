@@ -1,5 +1,5 @@
 import os
-
+import asyncio
 from dotenv import load_dotenv
 from langchain_deepseek import ChatDeepSeek
 
@@ -17,12 +17,30 @@ llm = ChatDeepSeek(
     api_key=os.getenv("OPENAI_API_KEY"),
     api_base=os.getenv("OPENAI_API_BASE"),
 )
-question = "你好, 帮我介绍一下你自己"
+question = "你好, 帮我介绍一下你自己？"
+question2 = "LanginChain 的作者是谁？"
 """
-# invoke 事件 输入list，输出list
+# invoke 单次调用（同步） 输入list，输出list
 response = llm.invoke(question)
 print(response)
 """
 
+"""
+# stream 流式调用（边生成边接收）
 for chunk in llm.stream(question):
     print(chunk.content)
+"""
+
+"""
+# batch  批量调用（多个输入一起处理）
+response = llm.batch([question, question2])
+print(response)
+"""
+
+# astream_events异步流事件
+async def main():
+    async for event in llm.astream_events("LanginChain 的作者是谁？", version="v2"):
+        print(f"event: {event['event']} | name={event['name']} | data={event['data']}")
+
+asyncio.run(main())
+
