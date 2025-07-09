@@ -97,3 +97,25 @@ pipreqs . --force --encoding=utf-8 --ignore tests,venv
 #### 注意事项
 > 1. pipreqs 依赖源文件中的 import 语句，不会识别动态导入。 
 > 2. 如果你用的是模块别名（如 import numpy as np），它也能识别。
+
+
+## 标准参数、事件与输入输出
+
+### LangChain Message
+
+#### SystemMessage: 系统角色
+#### HumanMessage: 用户角色
+#### AIMessage: 应用助理角色
+
+| 属性                | 标准化  | 描述                             | 
+|-------------------|------|--------------------------------|
+| content           | 原生   | 通常为字符串，但也可以是内容块列表              | 
+| Tool_call         | 标准化  | 与消息相关的工具调用                     | 
+| Invalid_tool_call | 标准化  | 工具调用与消息相关的解析错误                 |
+| usage_metadata    | 标准化  | 元数据（输入输出token数，总计token数等）      |
+| id                | 标准化  | 消息唯一标识符                        |
+| response_metadata | 原生  | 相应元数据（响应头、token计数）             |
+> ⚠️注意：不同的大模型提供的内容属性并不相同，目前行业暂无统一标准。
+#### AIMessageChunk: 应用助理流式输出
+#### ToolMessage: 工具角色
+#### RemoveMessage: LangGraph 聊天记录
