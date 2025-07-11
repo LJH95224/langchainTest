@@ -14,8 +14,8 @@ load_dotenv(verbose=True, override=True)
 #     timeout=None,
 #     # 最大重试次数
 #     max_retries=2,
-#     api_key=os.getenv("OPENAI_API_KEY"),
-#     api_base=os.getenv("OPENAI_API_BASE"),
+#     api_key=os.getenv("DEEP_SEEK_API_KEY"),
+#     api_base=os.getenv("DEEP_SEEK_API_BASE"),
 # )
 
 # deepseek-chat 模型
@@ -27,8 +27,8 @@ llm = ChatDeepSeek(
     timeout=None,
     # 最大重试次数
     max_retries=2,
-    api_key=os.getenv("OPENAI_API_KEY"),
-    api_base=os.getenv("OPENAI_API_BASE"),
+    api_key=os.getenv("DEEP_SEEK_API_KEY"),
+    api_base=os.getenv("DEEP_SEEK_API_BASE"),
 )
 
 def calculator(input_str):

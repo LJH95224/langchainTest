@@ -3,18 +3,17 @@
 import os
 
 from dotenv import load_dotenv
-from langchain_deepseek import ChatDeepSeek
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_core.example_selectors import SemanticSimilarityExampleSelector
+from langchain_core.example_selectors import MaxMarginalRelevanceExampleSelector
 from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate
 from langchain_openai import OpenAIEmbeddings
 from pprint import pprint
 
 load_dotenv(verbose=True, override=True)
 
-api_key=os.getenv("OPENAI_API_KEY")
-api_base=os.getenv("OPENAI_API_BASE")
+api_key=os.getenv("DEEP_SEEK_API_KEY")
+api_base=os.getenv("DEEP_SEEK_API_BASE")
 
 # 构造提示词模版
 example_prompt = PromptTemplate(
@@ -28,17 +27,18 @@ examples = [
     {"input": "tall", "output": "short"},
     {"input": "sunny", "output": "gloomy"},
     {"input": "windy", "output": "calm"},
+    {"input": "高兴", "output": "悲伤"},
 ]
 
 embeddings_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-example_selector = SemanticSimilarityExampleSelector.from_examples(
+example_selector = MaxMarginalRelevanceExampleSelector.from_examples(
     # 传入示例组
     examples=examples,
     # 使用 openAI 嵌入来做相似度搜索
     embeddings = embeddings_model,
     # 使用Chroma向   量数据库来实现对相似结果的过程存储
-    vectorstore_cls=Chroma,
+    vectorstore_cls=FAISS,
     # 结果条数
     k=1,
 )

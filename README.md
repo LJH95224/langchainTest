@@ -123,12 +123,91 @@ pipreqs . --force --encoding=utf-8 --ignore tests,venv
 
 ## 示例选择权使用
 
-### 根据长度动态选择提示词示例
+### 根据 token 长度控制选择的示例总长度
     根据用户的输入、提示词总长度来动态计算可容纳的示例个数
 
-### 根据语义相似度选择提示词示例
+### 使用向量相似度选择与输入语义最相近的示例
 - 筛选示例组中与输入的语义相似度最高的示例
-- 本质：将问题语示例嵌入向量空间后进行搜索对比
+- 本质：将问题语义与示例嵌入向量空间后进行搜索对比
 - 依赖：向量数据库
 <img src="./image/据语义相似度选择提示词.png">
-### 根据MMR与最大余弦相似度选择示例
+
+### 使用 MMR（最大边际相关性）算法选择多样性和相关性兼顾的示例
+- 筛选示例数组中符合MMR规则的示例
+- 本质： 将问题与示例嵌入向量空间后进行搜索对比
+- 依赖： 向量数据库
+- MMR: MMR（Maximal Marginal Relevance）是一种排序策略，核心思想是：
+  - 选择与输入最相关的样本
+  - 同时避免样本之间过于相似 → 保证信息多样性
+
+## LangSmith hub 管理提示词
+
+
+## 什么是Pydiantic
+    Pydantic 是一个基于 Python 类型注解（Type Hints） 的数据验证和设置管理库。它广泛应用于 FastAPI、LangChain 等现代 Python 框架中。
+    Pydantic 允许你像写类一样定义数据结构，并自动帮你完成数据验证、类型转换和错误提示。
+
+📦 示例：定义一个用户数据模型
+```python
+from pydantic import BaseModel
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+
+# 自动类型转换 & 校验
+user = User(id='123', name='Alice', email='alice@example.com')
+print(user.id)  # 自动转换为 int: 123
+```
+
+🔧 常见功能
+
+| 功能 | 	示例                  |
+| ----|:---------------------|
+| 类型强校验 | 自动抛出错误（如字符串传 int 字段） |
+| 类型自动转换 | 如 "123" → int(123)   |
+| 默认值支持	| 字段可设置默认值             |
+| 嵌套对象结构定义	|可以嵌套 BaseModel|
+| 校验规则自定义	|自定义 validator 做复杂校验|
+| JSON 支持|	可与 dict/JSON 快速互转|
+| 更好的错误信息	|报错信息结构化，可用于接口返回|
+
+📚 应用场景
+
+|场景	| 用法                         |
+| ----|:---------------------------|
+|💡 FastAPI 请求体解析	| 自动把请求体校验为 Pydantic 模型      |
+|🧠 LangChain 参数验证	| 验证 Prompt、LLM 配置和链参数       |
+|🔒 配置管理	| 使用 BaseSettings 管理 .env 配置 |
+|📦 数据建模	| 把 Pydantic 用于数据库模型、缓存结构等   |
+
+
+⸻
+
+🧠 使用 Pydantic 的好处
+
+|优势|	说明|
+| ----|:---------------------|
+|✅ 强类型保障	|避免“脏数据”传播，提高代码健壮性|
+|✅ 自动数据转换	|少写 if 判断，多用标准数据结构|
+|✅ 更好的错误提示	|报错清晰，可追溯具体字段|
+|✅ 快速序列化/反序列化|	和 dict、JSON 转换无痛|
+|✅ 自动文档生成支持	|FastAPI 可自动生成文档|
+
+
+🧪 更复杂的校验（示例）
+```python
+from pydantic import BaseModel, validator
+
+class User(BaseModel):
+    name: str
+    age: int
+
+    @validator('age')
+    def check_age(cls, v):
+        if v < 0:
+            raise ValueError("年龄不能为负数")
+        return v
+
+```
