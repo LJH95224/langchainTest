@@ -4,11 +4,6 @@ from langchain_community.utilities import SQLDatabase
 
 db = SQLDatabase.from_uri("sqlite:///chinook.db")
 
-print(db.dialect)
-print(db.get_usable_table_names())
-db.run("SELECT * FROM Artist LIMIT 10")
-
-
 
 # 使用hub 上预制的提示词
 from langchain import hub
@@ -19,10 +14,6 @@ query_prompt_template = hub.pull("langchain-ai/sql-query-system-prompt")
 assert len(query_prompt_template.messages) >= 1
 
 query_prompt_template.messages[0].pretty_print()
-#
-# print(type(query_prompt_template))  # 看对象类型
-# print(query_prompt_template.messages)  # 看消息数组
-
 
 import os
 
@@ -76,11 +67,6 @@ def write_query(state: State):
     return {"query": result["query"]}
 
 
-sqlMessage = write_query({"question": "一共有多少个员工"})
-# print(f"sqlMessage: {sqlMessage}\n")
-# 打印结果: sqlMessage: {'query': 'SELECT COUNT(*) AS TotalEmployees FROM Employee;'}
-
-
 # 得到SQL语句，执行SQL语句，执行SQL语句存在风险
 from langchain_community.tools.sql_database.tool import QuerySQLDatabaseTool
 def execute_query(state: State):
@@ -88,8 +74,6 @@ def execute_query(state: State):
     execute_query_tool = QuerySQLDatabaseTool(db=db)
     return {"result": execute_query_tool.invoke(state["query"])}
 
-response = execute_query(sqlMessage)
-# print(f"response: {response}\n")
 
 from langchain_core.runnables import RunnablePassthrough
 
