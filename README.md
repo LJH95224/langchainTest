@@ -386,12 +386,12 @@ LangChain 的嵌入实现
 - embed_document  用于嵌入多个文本（文档）
 - embed_query 用于嵌入单个文本（查询）
 
-| 模型名	             | 模型方          | 	说明                    |
-|------------------|:-------------|:-----------------------|
-| OpenAI Embedding | 	OpenAI      | 	最常用的嵌入模型   一般嵌入维度1024 |    
-| Ollama Embedding | 	Ollama      | 	基于 LLama 模型           |	 
-| JinaEmbedding    | Jina.ai	     | 多语言嵌入模型                |
-| zhipingEmbedding | 	智谱         | 	基于智谱的嵌入模型             |
+| 模型名	              | 模型方          | 	说明                    |
+|-------------------|:-------------|:-----------------------|
+| OpenAI Embedding  | 	OpenAI      | 	最常用的嵌入模型   一般嵌入维度1024 |    
+| Ollama Embedding  | 	Ollama      | 	基于 LLama 模型           |	 
+| JinaEmbedding     | Jina.ai	     | 多语言嵌入模型                |
+| zhipingEmbedding  | 	智谱         | 	基于智谱的嵌入模型             |
 
 > 注意：
 > 1. 嵌入模型需要注意模型的适配语言。
@@ -407,4 +407,3 @@ LangChain 的嵌入实现
  - 向量数据库中存储了所有的外挂知识
  - 向量库本身内置算法对于检索很关键
  - 向量库与关系型数据库区别很大
- 
